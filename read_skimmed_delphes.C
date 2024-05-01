@@ -1,5 +1,5 @@
 /***************************************************************************
- *  Read Delphes file and save a skimmed version of root file with TLorentzvectors 
+ *  Read the skimmed version of delphes and print data from the TLorentzvectors 
 ****************************************************************************/
 
 #include <iostream>
