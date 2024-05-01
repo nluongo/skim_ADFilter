@@ -312,11 +312,15 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     
 }
 
-int skim_Delphes() {
-    const char* inputFileName = "Hplus_1800GeV_SLHA2.root"; //mg5_pythia_ttbarW_14tev_1.root";
-    const char* outputFileName = "skimmed_delphes.root";
+//void skim_Delphes(const char* inputFileName, const char* outputFileName) {
+void skim_Delphes(const char* inputFileName = nullptr, const char* outputFileName = nullptr) {
+    // Check if both input and output file names are provided
+    if (!inputFileName || !outputFileName) {
+        std::cerr << "Usage: root -b -q skim_Delphes.C(\"inputFileName\", \"outputFileName\")" << std::endl;
+        return;
+    }
+    // Call the skim_Delphes_file function with the provided file names
     readEventData(inputFileName, outputFileName);
-
-    return 0;
 }
+
 
