@@ -1,3 +1,7 @@
+/***************************************************************************
+ *  Read Delphes file and save a skimmed version of root file with TLorentzvectors 
+****************************************************************************/
+
 #include <iostream>
 #include "TFile.h"
 #include "TTree.h"
