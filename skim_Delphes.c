@@ -177,12 +177,6 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
             }
         }
         bjet_Vectors.push_back(event_bJetVectors);
-        
-        // If Electron_Mass is not present in file, we can set it 0.000511
-        //Float_t Electron_Mass[kMaxElectron];
-        //for (Int_t j = 0; j < kMaxElectron; ++j) {
-        //    Electron_Mass[j] = 0.000511;
-        //}
 
         for (Int_t j = 0; j < kMaxElectron; ++j) {
             TLorentzVector electronVector;
@@ -190,13 +184,6 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
             event_elVectors.push_back(electronVector);
         }
         el_Vectors.push_back(event_elVectors);
-
-        
-        // If Muon_Mass is not present in file, we can set it 0.1057
-        //Float_t Muon_Mass[kMaxMuon];
-        //for (Int_t j = 0; j < kMaxMuon; ++j) {
-        //    Muon_Mass[j] = 0.1057;
-        //}
 
         for (Int_t j = 0; j < kMaxMuon; ++j) {
             TLorentzVector muonVector;
