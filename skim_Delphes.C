@@ -28,16 +28,19 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     Int_t kMaxElectron = 0;
     Int_t kMaxPhoton = 0;
     Int_t kMaxMuon = 0;
+    Int_t kMaxMissingET = 0;
 
     TBranch* jet_Pt_Branch = tree->GetBranch("Jet.PT");
     TBranch* el_Pt_Branch = tree->GetBranch("Electron.PT");
     TBranch* mu_Pt_Branch = tree->GetBranch("Muon.PT");
     TBranch* ph_Pt_Branch = tree->GetBranch("Photon.PT");
+    TBranch* MET_Branch = tree->GetBranch("MissingET.MET");
 
     TLeaf* jet_leaf = jet_Pt_Branch->GetLeaf("Jet.PT");
     TLeaf* el_leaf = el_Pt_Branch->GetLeaf("Electron.PT");
     TLeaf* mu_leaf = mu_Pt_Branch->GetLeaf("Muon.PT");
     TLeaf* ph_leaf = ph_Pt_Branch->GetLeaf("Photon.PT");
+    TLeaf* MET_leaf = MET_Branch->GetLeaf("MissingET.MET");
 
     Long64_t numEntries1 = tree->GetEntries();
     for (Long64_t i = 0; i < numEntries1; ++i) {
@@ -71,11 +74,21 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
             kMaxPhoton = len_ph;
         }
     }
+
+    for (Long64_t i = 0; i < numEntries1; ++i) {
+        MET_Branch->GetEntry(i);
+        Int_t len_MET = MET_leaf->GetLen();
+        if (len_MET > kMaxMissingET) {
+            kMaxMissingET = len_MET;
+        }
+    }
+
     std::cout << "kMaxJet: " << kMaxJet << std::endl;
     std::cout << "kMaxElectron: " << kMaxElectron << std::endl;
     std::cout << "kMaxMuon: " << kMaxMuon << std::endl;
     std::cout << "kMaxPhoton: " << kMaxPhoton << std::endl;
-    
+    std::cout << "kMaxMissingET: " << kMaxMissingET << std::endl;
+
     
     Float_t         Jet_PT[kMaxJet];   //[Jet_]
     Float_t         Jet_Eta[kMaxJet];   //[Jet_]
@@ -97,7 +110,11 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     Float_t         Photon_Eta[kMaxPhoton];   //[Photon_]
     Float_t         Photon_Phi[kMaxPhoton];   //[Photon_]
     Float_t         Photon_E[kMaxPhoton];   //[Photon_]
-    
+
+    Float_t         MissingET_MET[kMaxMissingET];   //[MissingET_]
+    Float_t         MissingET_Eta[kMaxMissingET];   //[MissingET_]
+    Float_t         MissingET_Phi[kMaxMissingET];   //[MissingET_]    
+
     TBranch        *b_Jet_PT;   //!
     TBranch        *b_Jet_Eta;   //!
     TBranch        *b_Jet_Phi;   //!
@@ -116,6 +133,10 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     TBranch        *b_Photon_Eta;   //!
     TBranch        *b_Photon_Phi;   //!
     TBranch        *b_Photon_E;   //!
+
+    TBranch        *b_MissingET_MET;   //!
+    TBranch        *b_MissingET_Eta;   //!
+    TBranch        *b_MissingET_Phi;   //!
     
     tree->SetBranchAddress("Jet.PT", Jet_PT, &b_Jet_PT);
     tree->SetBranchAddress("Jet.Eta", Jet_Eta, &b_Jet_Eta);
@@ -137,6 +158,10 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     tree->SetBranchAddress("Photon.Eta", Photon_Eta, &b_Photon_Eta);
     tree->SetBranchAddress("Photon.Phi", Photon_Phi, &b_Photon_Phi);
     tree->SetBranchAddress("Photon.E", Photon_E, &b_Photon_E);
+
+    tree->SetBranchAddress("MissingET.Eta", MissingET_Eta, &b_MissingET_Eta);
+    tree->SetBranchAddress("MissingET.Phi", MissingET_Phi, &b_MissingET_Phi);
+    tree->SetBranchAddress("MissingET.MET", MissingET_MET, &b_MissingET_MET);
     
     // Loop over entries in the TTree and create Vectors
     std::vector<std::vector<TLorentzVector>> jet_Vectors;
@@ -144,6 +169,7 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     std::vector<std::vector<TLorentzVector>> el_Vectors;
     std::vector<std::vector<TLorentzVector>> mu_Vectors;
     std::vector<std::vector<TLorentzVector>> photon_Vectors;
+    std::vector<std::vector<TLorentzVector>> MET_Vectors;
 
     Long64_t numEntries = tree->GetEntries();
     cout << "no. of events :" << numEntries << endl;
@@ -155,6 +181,7 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
         std::vector<TLorentzVector> event_elVectors;
         std::vector<TLorentzVector> event_muVectors;
         std::vector<TLorentzVector> event_phVectors;
+        std::vector<TLorentzVector> event_METVectors;
 
         // Get entry i
         tree->GetEntry(i);
@@ -201,6 +228,14 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
         }
         photon_Vectors.push_back(event_phVectors);
 
+        // Create TLorentzVector objects for MET and store them in the vector
+        for (Int_t j = 0; j < kMaxMissingET; ++j) {
+            TLorentzVector METVector;
+            METVector.SetPtEtaPhiE(0.01, MissingET_Eta[j], MissingET_Phi[j], MissingET_MET[j]);
+            event_METVectors.push_back(METVector);
+        }
+        MET_Vectors.push_back(event_METVectors);
+
     }
     // Close the file
     inputFile.Close();
@@ -214,6 +249,7 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     TClonesArray electronArray("TLorentzVector", 20);
     TClonesArray muonArray("TLorentzVector", 20);
     TClonesArray photonArray("TLorentzVector", 20);
+    TClonesArray METArray("TLorentzVector", 20);
 
     // Add branches to the TTree for each TClonesArray
     ntuple.Branch("Jets", &jetArray, 256000, 0);
@@ -221,7 +257,8 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     ntuple.Branch("Electrons", &electronArray, 256000, 0);
     ntuple.Branch("Muons", &muonArray, 256000, 0);
     ntuple.Branch("Photons", &photonArray, 256000, 0);
-    
+    ntuple.Branch("METs", &METArray, 256000, 0);
+
     // Loop over all events and fill TLorentzVectors into TClonesArrays
     for (size_t i = 0; i < jet_Vectors.size(); ++i) {
         // Clear the TClonesArrays before filling them for the current event
@@ -230,7 +267,8 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
         electronArray.Clear();
         muonArray.Clear();
         photonArray.Clear();
-        
+        METArray.Clear();
+
         // Fill TClonesArrays with TLorentzVectors for jets
         for (const auto& jet : jet_Vectors[i]) {
             new (jetArray[jetArray.GetEntries()]) TLorentzVector(jet);
@@ -256,6 +294,11 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
             new (photonArray[photonArray.GetEntries()]) TLorentzVector(photon);
         }
 
+        // Fill TClonesArrays with TLorentzVectors for METs
+        for (const auto& MET : MET_Vectors[i]) {
+            new (METArray[METArray.GetEntries()]) TLorentzVector(MET);
+        }
+
         // Fill the TTree for the current event
         ntuple.Fill();
     }
@@ -272,7 +315,7 @@ void readEventData(const char* inputFileName, const char* outputFileName) {
     cout << "el_Vectors.size :" << el_Vectors.size() << endl;
     cout << "mu_Vectors.size :" << mu_Vectors.size() << endl;
     cout << "photon_Vectors.size :" << photon_Vectors.size() << endl;
- 
+    cout << "MET_Vectors.size :" << MET_Vectors.size() << endl;
     
     /*
     //Read vectors
