@@ -185,7 +185,8 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
 
         // Get entry i
         tree->GetEntry(i);
-        cout << "Event " << i << endl; 
+        //cout << "Event " << i << endl; 
+        if(i%1000==0) cout << "Event #" <<  i << endl;
 
         for (Int_t j = 0; j < kMaxJet; ++j) {
             TLorentzVector jet_Vector;
