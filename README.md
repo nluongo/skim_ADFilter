@@ -4,7 +4,12 @@ Macro skim_Delphes.C reads any Delphes (.root) file, looks into Delphes Ttree, a
 
 To run this, use the following command while replacing "input.root", "skimmed_delphes" (output file) by your own filenames:
 
-root -l -b 'skim_Delphes.C("input.root", "skimmed_delphes.root")'
+root -l -b 'skim_Delphes.C("input_delphes.root", "skimmed_delphes.root", Center_of_mass_energy_value)' 
+
+If Center_of_mass_energy_value=13000 GeV, use : 
+
+root -l -b 'skim_Delphes.C("input_delphes.root", "skimmed_delphes.root", 13000)' 
+
 
 # Read skimmed_delphes file 
 
