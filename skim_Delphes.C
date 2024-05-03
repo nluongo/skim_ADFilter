@@ -8,7 +8,7 @@
 #include <iostream>
 #include <TLeaf.h>
 
-void readEventData(const char* inputFileName, const char* outputFileName, Double_t cmsEnergy) {
+void readEventData(const char* inputFileName, const char* outputFileName, Double32_t cmsEnergy) {
     // Open the ROOT file
     TFile inputFile(inputFileName);
     if (inputFile.IsZombie()) {
@@ -258,7 +258,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     ntuple.Branch("Electrons", &electronArray, 256000, 0);
     ntuple.Branch("Muons", &muonArray, 256000, 0);
     ntuple.Branch("Photons", &photonArray, 256000, 0);
-    ntuple.Branch("METs", &METArray, 256000, 0);
+    ntuple.Branch("MET", &METArray, 256000, 0);
     ntuple.Branch("CMS_Energy", &cmsEnergy, "CMS_Energy/D");
 
     // Loop over all events and fill TLorentzVectors into TClonesArrays
@@ -357,7 +357,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     
 }
 
-void skim_Delphes(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double_t cmsEnergy = 0.0) {
+void skim_Delphes(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0) {
     // Check if both input and output file names are provided
     if (!inputFileName || !outputFileName) {
         std::cerr << "Usage: root -b -q skim_Delphes.C(\"inputFileName\", \"outputFileName\", cmsEnergy)" << std::endl;
