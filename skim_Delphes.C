@@ -232,7 +232,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         // Create TLorentzVector objects for MET and store them in the vector
         for (Int_t j = 0; j < kMaxMissingET; ++j) {
             TLorentzVector METVector;
-            METVector.SetPtEtaPhiE(0.01, MissingET_Eta[j], MissingET_Phi[j], MissingET_MET[j]);
+            METVector.SetPtEtaPhiM(MissingET_MET[j], 0.0, MissingET_Phi[j], 0.0);
             event_METVectors.push_back(METVector);
         }
         MET_Vectors.push_back(event_METVectors);
