@@ -23,10 +23,12 @@ Example:
 root -l -b 'skim_Delphes_PHYSLITE.C("PHYSLITE1.root", "out_phys_light.root", 13000)'
 
 
-# Read skimmed_delphes file 
+# Read skimmed file (delphes or PHYSLITE)
 
-Macro read_skimmed_delphes.C reads the file skimmed_delphes.root and prints all the TLorentzVectors for all events. 
+Macro read_skimmed_file.C reads the file skimmed_delphes.root and prints all the TLorentzVectors for all events. 
 
-To run this, use the following command while replacing "skimmed_delphes.root" by your own file name :
+To run this, use the following command while replacing "skimmed_delphes.root"/"skimmed_PHYSLITE.root" by your own file name :
 
-root -l -b 'read_skimmed_delphes.C("skimmed_delphes.root")'
+root -l -b 'read_skimmed_file.C("skimmed_delphes.root")'
+root -l -b 'read_skimmed_file.C("skimmed_PHYSLITE.root")'
+
