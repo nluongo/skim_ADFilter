@@ -112,7 +112,7 @@ void readRootFile(const char* filename) {
     inputFile.Close();
 }
 
-void read_skimmed_delphes(const char* inputFileName) {
+void read_skimmed_file(const char* inputFileName) {
     // Call the function to read the root file and print TLorentzVectors
     readRootFile(inputFileName);
 
