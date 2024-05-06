@@ -29,21 +29,24 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     Int_t kMaxPhoton = 0;
     Int_t kMaxMuon = 0;
     Int_t kMaxMissingET = 0;
-    Int_t kMaxWeight = 0;
+    //Int_t kMaxWeight = 0;
+    Int_t kMaxEvent = 0;
 
     TBranch* jet_Pt_Branch = tree->GetBranch("Jet.PT");
     TBranch* el_Pt_Branch = tree->GetBranch("Electron.PT");
     TBranch* mu_Pt_Branch = tree->GetBranch("Muon.PT");
     TBranch* ph_Pt_Branch = tree->GetBranch("Photon.PT");
     TBranch* MET_Branch = tree->GetBranch("MissingET.MET");
-    TBranch* Weight_Branch = tree->GetBranch("Weight.Weight");
+    //TBranch* Weight_Branch = tree->GetBranch("Weight.Weight");
+    TBranch* eventWeightBranch = tree->GetBranch("Event.Weight");
 
     TLeaf* jet_leaf = jet_Pt_Branch->GetLeaf("Jet.PT");
     TLeaf* el_leaf = el_Pt_Branch->GetLeaf("Electron.PT");
     TLeaf* mu_leaf = mu_Pt_Branch->GetLeaf("Muon.PT");
     TLeaf* ph_leaf = ph_Pt_Branch->GetLeaf("Photon.PT");
     TLeaf* MET_leaf = MET_Branch->GetLeaf("MissingET.MET");
-    TLeaf* Weight_leaf = Weight_Branch->GetLeaf("Weight.Weight");
+    //TLeaf* Weight_leaf = Weight_Branch->GetLeaf("Weight.Weight");
+    TLeaf* eventWeightLeaf = eventWeightBranch->GetLeaf("Event.Weight");
 
     Long64_t numEntries1 = tree->GetEntries();
     for (Long64_t i = 0; i < numEntries1; ++i) {
@@ -86,6 +89,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
     }
 
+    /*
     for (Long64_t i = 0; i < numEntries1; ++i) {
         Weight_Branch->GetEntry(i);
         Int_t len_W = Weight_leaf->GetLen();
@@ -93,14 +97,25 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
             kMaxWeight = len_W;
         }
     }
+    */
+
+    for (Long64_t i = 0; i < numEntries1; ++i) {
+        eventWeightBranch->GetEntry(i);
+        Int_t len_W = eventWeightLeaf->GetLen();
+        if (len_W > kMaxEvent) {
+            kMaxEvent = len_W;
+        }
+    }
+    
 
     std::cout << "kMaxJet: " << kMaxJet << std::endl;
     std::cout << "kMaxElectron: " << kMaxElectron << std::endl;
     std::cout << "kMaxMuon: " << kMaxMuon << std::endl;
     std::cout << "kMaxPhoton: " << kMaxPhoton << std::endl;
     std::cout << "kMaxMissingET: " << kMaxMissingET << std::endl;
-    std::cout << "kMaxWeight: " << kMaxWeight << std::endl;
-    
+    //std::cout << "kMaxWeight: " << kMaxWeight << std::endl;
+    std::cout << "kMaxEvent: " << kMaxEvent << std::endl;
+
     Float_t         Jet_PT[kMaxJet];   //[Jet_]
     Float_t         Jet_Eta[kMaxJet];   //[Jet_]
     Float_t         Jet_Phi[kMaxJet];   //[Jet_]
@@ -126,7 +141,8 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     Float_t         MissingET_Eta[kMaxMissingET];   //[MissingET_]
     Float_t         MissingET_Phi[kMaxMissingET];   //[MissingET_]    
 
-    Float_t         Weight_Weight[kMaxWeight];   //[Weight_]
+    //Float_t         Weight_Weight[kMaxWeight];   //[Weight_]
+    Float_t         Event_Weight[kMaxEvent];   //[Event_]
 
     TBranch        *b_Jet_PT;   //!
     TBranch        *b_Jet_Eta;   //!
@@ -151,8 +167,8 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     TBranch        *b_MissingET_Eta;   //!
     TBranch        *b_MissingET_Phi;   //!
 
-    TBranch        *b_Weight_Weight;   //!
-
+    //TBranch        *b_Weight_Weight;   //!
+    TBranch        *b_Event_Weight;   //!
     
     tree->SetBranchAddress("Jet.PT", Jet_PT, &b_Jet_PT);
     tree->SetBranchAddress("Jet.Eta", Jet_Eta, &b_Jet_Eta);
@@ -179,7 +195,8 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     tree->SetBranchAddress("MissingET.Phi", MissingET_Phi, &b_MissingET_Phi);
     tree->SetBranchAddress("MissingET.MET", MissingET_MET, &b_MissingET_MET);
 
-    tree->SetBranchAddress("Weight.Weight", Weight_Weight, &b_Weight_Weight);
+    //tree->SetBranchAddress("Weight.Weight", Weight_Weight, &b_Weight_Weight);
+    tree->SetBranchAddress("Event.Weight", Event_Weight, &b_Event_Weight);
 
     // Loop over entries in the TTree and create Vectors
     std::vector<std::vector<TLorentzVector>> jet_Vectors;
@@ -258,8 +275,20 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
         MET_Vectors.push_back(event_METVectors);
 
-        for (Int_t j = 0; j < kMaxWeight; ++j) {
-            event_WeightVectors.push_back(Weight_Weight[j]);
+        //for (Int_t j = 0; j < kMaxWeight; ++j) {
+        //    event_WeightVectors.push_back(Weight_Weight[j]);
+        //}
+        //Weight_Vectors.push_back(event_WeightVectors);
+
+        if (eventWeightLeaf) {
+            for (Int_t j = 0; j < kMaxEvent; ++j) {
+                event_WeightVectors.push_back(Event_Weight[j]);
+            }
+        }
+        if (!eventWeightLeaf){
+            for (Int_t j = 0; j < kMaxEvent; ++j) {
+                event_WeightVectors.push_back(1.0);
+            }
         }
         Weight_Vectors.push_back(event_WeightVectors);
 
