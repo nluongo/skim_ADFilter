@@ -29,6 +29,8 @@ void readRootFile(const char* filename) {
     TClonesArray* electronArray = nullptr;
     TClonesArray* muonArray = nullptr;
     TClonesArray* photonArray = nullptr;
+    TClonesArray* METArray = nullptr;
+    Double32_t cmsEnergy = 0;
 
     // Set branch addresses for each TClonesArray
     ntuple->SetBranchAddress("Jets", &jetArray);
@@ -36,6 +38,11 @@ void readRootFile(const char* filename) {
     ntuple->SetBranchAddress("Electrons", &electronArray);
     ntuple->SetBranchAddress("Muons", &muonArray);
     ntuple->SetBranchAddress("Photons", &photonArray);
+    ntuple->SetBranchAddress("MET", &METArray);
+    ntuple->SetBranchAddress("CMS_Energy", &cmsEnergy);
+
+    std::vector<Double_t>* weightVector = nullptr;
+    ntuple->SetBranchAddress("Weight", &weightVector);
 
     // Loop over all entries in the TTree
     Long64_t numEntries = ntuple->GetEntries();
@@ -43,6 +50,8 @@ void readRootFile(const char* filename) {
         ntuple->GetEntry(i);
 
         std::cout << "Event " << i << ":" << std::endl;
+
+        std::cout << " CMS_Energy: " << cmsEnergy << std::endl;
 
         // Print TLorentzVectors for jets
         std::cout << " Jets:" << std::endl;
@@ -77,6 +86,23 @@ void readRootFile(const char* filename) {
         for (int j = 0; j < photonArray->GetEntries(); ++j) {
             TLorentzVector* photon = dynamic_cast<TLorentzVector*>(photonArray->At(j));
             std::cout << "   Photon " << j << ": (Pt, Eta, Phi, M) = (" << photon->Pt() << ", " << photon->Eta() << ", " << photon->Phi() << ", " << photon->M() << ")" << std::endl;
+        }
+
+        // Print TLorentzVectors for photons
+        std::cout << " METs:" << std::endl;
+        for (int j = 0; j < METArray->GetEntries(); ++j) {
+            TLorentzVector* MET = dynamic_cast<TLorentzVector*>(METArray->At(j));
+            std::cout << "   MET " << j << ": (Pt, Eta, Phi, M) = (" << MET->Pt() << ", " << MET->Eta() << ", " << MET->Phi() << ", " << MET->M() << ")" << std::endl;
+        }
+
+        // Print Values of Weights
+        std::cout << " Weights:" << std::endl;
+        if (weightVector) {
+            for (size_t j = 0; j < weightVector->size(); ++j) {
+                std::cout << "  Weight " << j << ": " << (*weightVector)[j] << endl;
+            }
+        } else {
+            std::cerr << "Error: Weight vector is null." << std::endl;
         }
 
         std::cout << std::endl;
