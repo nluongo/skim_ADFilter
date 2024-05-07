@@ -360,10 +360,10 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
 void skim_MasterShef(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0) {
     // Check if both input and output file names are provided
     if (!inputFileName || !outputFileName) {
-        std::cerr << "Usage: root -b -q skim_Delphes.C(\"inputFileName\", \"outputFileName\", cmsEnergy)" << std::endl;
+        std::cerr << "Usage: root -b -q skim_MasterShef.C(\"inputFileName\", \"outputFileName\", cmsEnergy)" << std::endl;
         return;
     }
-    // Call the skim_Delphes_file function with the provided file names
+    // Call the skim_MasterShef function with the provided file names
     readEventData(inputFileName, outputFileName, cmsEnergy);
 }
 
