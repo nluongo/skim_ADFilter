@@ -153,7 +153,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         for (Int_t j = 0; j < nJets; ++j) {
             TLorentzVector jet_Vector;
             //cout << "jet_pt :" << jet_pt->at(j) << endl;
-            jet_Vector.SetPtEtaPhiE(jet_pt->at(j), jet_eta->at(j), jet_phi->at(j), jet_e->at(j));
+            jet_Vector.SetPtEtaPhiE(jet_pt->at(j)/1000.0, jet_eta->at(j), jet_phi->at(j), jet_e->at(j)/1000.0);
 	    event_JetVectors.push_back(jet_Vector);
         }
         jet_Vectors.push_back(event_JetVectors);
@@ -163,7 +163,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
             TLorentzVector bjet_Vector;
             //cout << j << " isbTag :" << Jet_BTag[j] << endl;
             if ((jet_IsBJet->at(j))==1){
-                bjet_Vector.SetPtEtaPhiE(jet_pt->at(j), jet_eta->at(j), jet_phi->at(j), jet_e->at(j));
+                bjet_Vector.SetPtEtaPhiE(jet_pt->at(j)/1000.0, jet_eta->at(j), jet_phi->at(j), jet_e->at(j)/1000.0);
 
                 event_bJetVectors.push_back(bjet_Vector);
             }
@@ -173,14 +173,14 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
 
         for (Int_t j = 0; j < nEl; ++j) {
             TLorentzVector electronVector;
-            electronVector.SetPtEtaPhiE(el_pt->at(j), el_eta->at(j), el_phi->at(j),  el_e->at(j));
+            electronVector.SetPtEtaPhiE(el_pt->at(j)/1000.0, el_eta->at(j), el_phi->at(j),  el_e->at(j)/1000.0);
             event_elVectors.push_back(electronVector);
         }
         el_Vectors.push_back(event_elVectors);
 
         for (Int_t j = 0; j < nMu; ++j) {
             TLorentzVector muonVector;
-            muonVector.SetPtEtaPhiE(mu_pt->at(j), mu_eta->at(j), mu_phi->at(j), mu_e->at(j));
+            muonVector.SetPtEtaPhiE(mu_pt->at(j)/1000.0, mu_eta->at(j), mu_phi->at(j), mu_e->at(j)/1000.0);
             event_muVectors.push_back(muonVector);
         }
         mu_Vectors.push_back(event_muVectors);
@@ -188,7 +188,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
           // Create TLorentzVector objects for photons and store them in the vector
         for (Int_t j = 0; j < nPh; ++j) {
             TLorentzVector photonVector;
-            photonVector.SetPtEtaPhiE(ph_pt->at(j), ph_eta->at(j), ph_phi->at(j), ph_e->at(j));
+            photonVector.SetPtEtaPhiE(ph_pt->at(j)/1000.0, ph_eta->at(j), ph_phi->at(j), ph_e->at(j)/1000.0);
             event_phVectors.push_back(photonVector);
         }
         photon_Vectors.push_back(event_phVectors);
@@ -196,7 +196,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         // Create TLorentzVector objects for MET and store them in the vector
       for (Int_t j = 0; j < 1; ++j) {
           TLorentzVector METVector;
-          METVector.SetPtEtaPhiM(MET_pt, 0, MET_phi, 0);
+          METVector.SetPtEtaPhiM(MET_pt/1000.0, 0, MET_phi, 0);
           event_METVectors.push_back(METVector);
       }
       MET_Vectors.push_back(event_METVectors);
