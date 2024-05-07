@@ -22,12 +22,13 @@ if Center_of_mass_energy_value = 13000 GeV,
 
 root -l -b 'skim_MasterShef.C("input_MasterShef.root", "skimmed_MasterShef.root", 13000)'
 
-# Read skimmed file (delphes or PHYSLITE)
+# Read skimmed file (delphes or MasterShef or PHYSLITE)
 
-Macro read_skimmed_file.C reads the file skimmed_delphes.root and prints all the TLorentzVectors for all events. 
+Macro read_skimmed_file.C reads the file skimmed_delphes.root (or other formats) and prints all the TLorentzVectors for all events. 
 
-To run this, use the following command while replacing "skimmed_delphes.root"/"skimmed_PHYSLITE.root" by your own file name :
+To run this, use the following command while replacing "skimmed_delphes.root"/"skimmed_MasterShef.root"/"skimmed_PHYSLITE.root" by your own file name :
 
 root -l -b 'read_skimmed_file.C("skimmed_delphes.root")'
+root -l -b 'read_skimmed_file.C("skimmed_MasterShef.root")'
 root -l -b 'read_skimmed_file.C("skimmed_PHYSLITE.root")'
 
