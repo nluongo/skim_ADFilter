@@ -1,5 +1,5 @@
 /***************************************************************************
- *  Read Delphes file and save a skimmed version of PHYSLITE root file with TLorentzvectors
+ *  Read Delphes file and save a skimmed version of MasterShef root file with TLorentzvectors
 ****************************************************************************/
 
 #include <TFile.h>
