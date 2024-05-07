@@ -18,6 +18,9 @@ Use this command :
 
 root -l -b 'skim_MasterShef.C("input_MasterShef.root", "skimmed_MasterShef.root", Center_of_mass_energy_value)' 
 
+if Center_of_mass_energy_value = 13000 GeV,
+
+root -l -b 'skim_MasterShef.C("input_MasterShef.root", "skimmed_MasterShef.root", 13000)'
 
 # Read skimmed file (delphes or PHYSLITE)
 
