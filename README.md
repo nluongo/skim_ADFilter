@@ -10,17 +10,13 @@ If Center_of_mass_energy_value=13000 GeV, use :
 
 root -l -b 'skim_Delphes.C("input_delphes.root", "skimmed_delphes.root", 13000)' 
 
-# skim PHYSLITE (ATLAS) files
+# skim MasterShef (ATLAS) files
 
-Macro skim_Delphes_PHYSLITE.C reads any PHYSLITE (.root) file of ATLAS, looks into "Nominal" Ttree, and saves TLorentzVectors for jets, b-tagged jets, electrons, muons, photons into a smaller file skimmed_delphes.root.
+Macro skim_MasterShef.C reads any MasterShef (.root) file of ATLAS, looks into "Nominal" Ttree, and saves TLorentzVectors for jets, b-tagged jets, electrons, muons, photons into a smaller file skimmed_delphes.root.
 
 Use this command :
 
-root -l -b 'skim_Delphes_PHYSLITE.C("input_PHYSLITE.root", "skimmed_PHYSLITE.root", Center_of_mass_energy_value)' 
-
-Example: 
-
-root -l -b 'skim_Delphes_PHYSLITE.C("PHYSLITE1.root", "out_phys_light.root", 13000)'
+root -l -b 'skim_MasterShef.C("input_MasterShef.root", "skimmed_MasterShef.root", Center_of_mass_energy_value)' 
 
 
 # Read skimmed file (delphes or PHYSLITE)
