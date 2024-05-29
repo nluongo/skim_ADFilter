@@ -264,6 +264,10 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     
     ntuple.Branch("Evt_Weight", &Evt_Weight, 256000, 0);
 
+    TH1F* meta = new TH1F("meta","meta",10,0,10);
+    meta->Fill("CMS energy [GeV]",(Double_t)cmsEnergy);
+    meta->Write();
+
     for (Long64_t i = 0; i < numEntries; ++i) {
         // Clear the vector for the current event
         //jet_Vectors.clear();
