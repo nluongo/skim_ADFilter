@@ -353,6 +353,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
         
         // Electron data
+        N_EL = len_el;
         for (Int_t j = 0; j < len_el; ++j) {
             cout << "electron: " << j << " " << Electron_PT[j] << endl;
             EL_pt.push_back(Electron_PT[j]);
@@ -361,6 +362,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
 
         // Muon data
+        N_MU = len_mu;
         for (Int_t j = 0; j < len_mu; ++j) {
             cout << "muon: " << j << " " << Muon_PT[j] << endl;
             MU_pt.push_back(Muon_PT[j]);
@@ -369,6 +371,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
 
         // Photon data
+        N_PH = len_ph;
         for (Int_t j = 0; j < len_ph; ++j) {
             cout << "photon: " << j << " " << Photon_PT[j] << endl;
             PH_pt.push_back(Photon_PT[j]);
@@ -378,6 +381,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
 
         // MissingET data
+        //N_MET = len_MET;
         for (Int_t j = 0; j < len_MET; ++j) {
             cout << "missingET: " << j << " " << MissingET_MET[j] << endl;
             MET_eta.push_back(MissingET_Eta[j]);
