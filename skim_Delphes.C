@@ -10,6 +10,11 @@
 
 
 void readEventData(const char* inputFileName, const char* outputFileName, Double32_t cmsEnergy) {
+
+
+    cout << "Wait.. Analysing Delphes ntuple with CMS=" << cmsEnergy << " GeV " << endl;
+
+
     // Open the ROOT file
     TFile inputFile(inputFileName);
     if (inputFile.IsZombie()) {
@@ -23,7 +28,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         std::cerr << "Error: Unable to access tree Delphes in file " << inputFileName << std::endl;
         return;
     }
-    
+   
     // Find values for kMaxJet,kMaxElectron, kMaxMuon, kMaxPhoton
     Int_t kMaxJet = 0;
     Int_t kMaxElectron = 0;
@@ -222,7 +227,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     std::vector<Double32_t> Evt_Weight;
 
     TFile outputFile(outputFileName, "RECREATE");
-    TTree ntuple("Ntuple", "Ntuple containing TLorentzVector objects");
+    TTree ntuple("Ntuple", "Ntuple for ADFilter");
 
     // jet branches
     ntuple.Branch("JET_n",  &N_JET);
@@ -308,10 +313,15 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
 
         // Get entry i
         tree->GetEntry(i);
-        //cout << "Event " << i << endl; 
-        if(i%1000==0) cout << "Event #" <<  i << endl;
 
-        cout << " " << endl;
+       if (i<=10 &&
+       (i<=100 && (i%10) == 0) ||
+       (i<=10000 && (i%1000) == 0)  ||
+       (i>=10000 && (i%10000) == 0) ) {
+          cout << "Event # " << i << endl; }
+
+
+        //cout << " " << endl;
 
         TLeaf* jet_leaf = jet_Pt_Branch->GetLeaf("Jet.PT");
         TLeaf* el_leaf = el_Pt_Branch->GetLeaf("Electron.PT");
@@ -327,53 +337,42 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         Long64_t len_MET = MET_leaf->GetLen();
         Long64_t len_W = eventWeightLeaf->GetLen();
 
-        cout << "len_jet =" << len_jet << endl;
-        //if (len_jet>kMaxJet) {
-        //    cout << "Nr =" << len_jet << " larger than kMaxJet=" << kMaxJet << endl;
-        //    return ;
-        //}
 
-        N_JET=len_jet;
+        // fill light jets and b-jets 
         for (Int_t j = 0; j < len_jet; ++j) {
-            cout << "jet : " << j << " " << Jet_PT[j] << endl;
-            JET_pt.push_back(Jet_PT[j]);
-            JET_eta.push_back(Jet_Eta[j]);
-            JET_phi.push_back(Jet_Phi[j]);
-            JET_mass.push_back(Jet_Mass[j]);
-        }
-      
-        for (Int_t j = 0; j < len_jet; ++j) {
-            if ((Jet_BTag[j]) != 1)
-                continue;
-            cout << "bjet : " << j << " " << Jet_PT[j] << endl;
-            bJET_pt.push_back(Jet_PT[j]);
-            bJET_eta.push_back(Jet_Eta[j]);
-            bJET_phi.push_back(Jet_Phi[j]);
-            bJET_mass.push_back(Jet_Mass[j]);
+            if ((Jet_BTag[j]) == 1) { 
+             //cout << "bjet : " << j << " " << Jet_PT[j] << endl;
+              bJET_pt.push_back(Jet_PT[j]);
+              bJET_eta.push_back(Jet_Eta[j]);
+              bJET_phi.push_back(Jet_Phi[j]);
+              bJET_mass.push_back(Jet_Mass[j]);
+            } else {
+              JET_pt.push_back(Jet_PT[j]);
+              JET_eta.push_back(Jet_Eta[j]);
+              JET_phi.push_back(Jet_Phi[j]);
+              JET_mass.push_back(Jet_Mass[j]);
+         }
         }
         
         // Electron data
-        N_EL = len_el;
         for (Int_t j = 0; j < len_el; ++j) {
-            cout << "electron: " << j << " " << Electron_PT[j] << endl;
+            //cout << "electron: " << j << " " << Electron_PT[j] << endl;
             EL_pt.push_back(Electron_PT[j]);
             EL_eta.push_back(Electron_Eta[j]);
             EL_phi.push_back(Electron_Phi[j]);
         }
 
         // Muon data
-        N_MU = len_mu;
         for (Int_t j = 0; j < len_mu; ++j) {
-            cout << "muon: " << j << " " << Muon_PT[j] << endl;
+            //cout << "muon: " << j << " " << Muon_PT[j] << endl;
             MU_pt.push_back(Muon_PT[j]);
             MU_eta.push_back(Muon_Eta[j]);
             MU_phi.push_back(Muon_Phi[j]);
         }
 
         // Photon data
-        N_PH = len_ph;
         for (Int_t j = 0; j < len_ph; ++j) {
-            cout << "photon: " << j << " " << Photon_PT[j] << endl;
+            //cout << "photon: " << j << " " << Photon_PT[j] << endl;
             PH_pt.push_back(Photon_PT[j]);
             PH_eta.push_back(Photon_Eta[j]);
             PH_phi.push_back(Photon_Phi[j]);
@@ -381,9 +380,8 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         }
 
         // MissingET data
-        //N_MET = len_MET;
         for (Int_t j = 0; j < len_MET; ++j) {
-            cout << "missingET: " << j << " " << MissingET_MET[j] << endl;
+            //cout << "missingET: " << j << " " << MissingET_MET[j] << endl;
             MET_eta.push_back(MissingET_Eta[j]);
             MET_phi.push_back(MissingET_Phi[j]);
             MET_met.push_back(MissingET_MET[j]);
@@ -391,10 +389,17 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
         
         // Event.Weight data
         for (Int_t j = 0; j < len_W; ++j) {
-            cout << "Event.Weight: " << j << " " <<  Event_Weight[j] << endl;
+            //cout << "Event.Weight: " << j << " " <<  Event_Weight[j] << endl;
             Evt_Weight.push_back(Event_Weight[j]);
         }
-      
+     
+
+       N_JET=JET_pt.size();
+       N_bJET=bJET_pt.size();
+       N_EL = EL_pt.size();
+       N_MU = MU_pt.size();
+       N_PH = PH_pt.size();
+ 
        // fill ntuples
        ntuple.Fill();
 
