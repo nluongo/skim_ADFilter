@@ -295,6 +295,12 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
             cout << "Event.Weight: " << j << " " <<  nominalWeight << endl;
             Evt_Weight.push_back(nominalWeight);
         }
+
+       N_JET=JET_pt.size();
+       N_bJET=bJET_pt.size();
+       N_EL = EL_pt.size();
+       N_MU = MU_pt.size();
+       N_PH = PH_pt.size();
       
        // fill ntuples
        ntuple.Fill();
