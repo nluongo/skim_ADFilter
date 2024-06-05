@@ -357,7 +357,7 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
 }
 
 
-void skim_MasterShef(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0) {
+void skim_MasterShef_old(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0) {
     // Check if both input and output file names are provided
     if (!inputFileName || !outputFileName) {
         std::cerr << "Usage: root -b -q skim_MasterShef.C(\"inputFileName\", \"outputFileName\", cmsEnergy)" << std::endl;
