@@ -9,7 +9,7 @@
 #include <TLeaf.h>
 
 
-void readEventData(const char* inputFileName, const char* outputFileName, Double32_t cmsEnergy) {
+void readEventData(const char* inputFileName, const char* outputFileName, Double32_t cmsEnergy, Double32_t cross) {
     // Open the ROOT file
     TFile inputFile(inputFileName);
     if (inputFile.IsZombie()) {
@@ -189,7 +189,10 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     ntuple.Branch("Evt_Weight", &Evt_Weight, 256000, 0);
     
     TH1F* meta = new TH1F("meta","meta",10,0,10);
-    meta->Fill("CMS energy [GeV]",(Double_t)cmsEnergy);
+    meta->Fill("CMS energy [GeV]", cmsEnergy);
+    meta->Fill("cross section [PB]", cross);
+    meta->SetBinError(1,0);
+    meta->SetBinError(2,0);
     meta->Write();
 
     for (Long64_t i = 0; i < numEntries; ++i) {
@@ -319,14 +322,14 @@ void readEventData(const char* inputFileName, const char* outputFileName, Double
     
 }
 
-void skim_MasterShef(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0) {
+void skim_MasterShef(const char* inputFileName = nullptr, const char* outputFileName = nullptr, Double32_t cmsEnergy = 0.0, Double32_t cross = 0.0) {
     // Check if both input and output file names are provided
     if (!inputFileName || !outputFileName) {
-        std::cerr << "Usage: root -b -q skim_MasterShef.C(\"inputFileName\", \"outputFileName\", cmsEnergy)" << std::endl;
+        std::cerr << "Usage: root -b -q skim_MasterShef.C(\"inputFileName\", \"outputFileName\", cmsEnergy, cross)" << std::endl;
         return;
     }
     // Call the skim_Delphes_file function with the provided file names
-    readEventData(inputFileName, outputFileName, cmsEnergy);
+    readEventData(inputFileName, outputFileName, cmsEnergy, cross);
 }
 
 
